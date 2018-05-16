@@ -15,10 +15,10 @@ namespace SpatialDotNet
         public string Error { get; set; }
 
         [JsonProperty("level")]
-        public string Level { get; set; }
+        public SpatialLogLevel Level { get; set; }
 
         [JsonProperty("original_log_level")]
-        public int OriginalLogLevel { get; set; }
+        public SpatialLogLevel OriginalLogLevel { get; set; }
 
         [JsonProperty("stack")]
         public string Stack { get; set; }
@@ -29,24 +29,24 @@ namespace SpatialDotNet
     {
         public SpatialCloud(Func<SpatialCommandRunner> commandFactory) : base(commandFactory) { }
 
-        public async Task<SpatialCloudResponse> Connect(string projectName = "")
+        /* cloud connect external <deployment name> [flags] */
+        public async Task<SpatialCloudResponse> Connect(string deploymentName, string projectName = "")
         {
-            var commandResult = await CommandFactory().SetCommand(string.IsNullOrEmpty(projectName)
-                    ? "cloud connect external"
-                    : $"cloud connect external --project_name {projectName}")
+            var commandResult = await CommandFactory().SetCommand($"cloud connect external {deploymentName} " +
+                                                                  $"{(string.IsNullOrEmpty(projectName) ? string.Empty : $"--project_name {projectName}")}")
                 .Execute();
 
-            return JsonConvert.DeserializeObject<SpatialCloudResponse>(commandResult.ElementAt(1));
+            return JsonConvert.DeserializeObject<SpatialCloudResponse>(commandResult.Last());
         }
 
-        public async Task<SpatialCloudResponse> Delete(string projectName = "")
+        /* cloud delete <deployment name> [flags] */
+        public async Task<SpatialCloudResponse> Delete(string deploymentName, string projectName = "")
         {
-            var commandResult = await CommandFactory().SetCommand(string.IsNullOrEmpty(projectName)
-                    ? "cloud delete"
-                    : $"cloud delete --project_name {projectName}")
+            var commandResult = await CommandFactory().SetCommand($"cloud delete {deploymentName} " +
+                                                                  $"{(string.IsNullOrEmpty(projectName) ? string.Empty : $"--project_name {projectName}")}")
                 .Execute();
 
-            return JsonConvert.DeserializeObject<SpatialCloudResponse>(commandResult.ElementAt(1));
+            return JsonConvert.DeserializeObject<SpatialCloudResponse>(commandResult.Last());
         }
 
         public async Task<IEnumerable<SpatialResponse>> HistoryList()
@@ -79,6 +79,7 @@ namespace SpatialDotNet
             throw new NotImplementedException();
         }
 
+        /* cloud -h */
         public async Task<string> Help()
         {
             var result = await CommandFactory().SetCommand("cloud -h").Execute(true);

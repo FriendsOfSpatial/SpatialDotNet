@@ -10,12 +10,12 @@ namespace SpatialDotNet
 
         public async Task Launch()
         {
-
+            throw new NotImplementedException();
         }
 
         public async Task WorkerLaunch()
         {
-
+            throw new NotImplementedException();
         }
 
         public async Task<string> Help()

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using NLog;
 
 namespace SpatialDotNet
 {
@@ -13,13 +14,18 @@ namespace SpatialDotNet
         public string CliVersion { get; set; }
 
         [JsonProperty("level")]
-        public string Level { get; set; }
+        public SpatialLogLevel Level { get; set; }
 
         [JsonProperty("msg")]
         public string Message { get; set; }
 
         [JsonProperty("time")]
         public DateTime Time { get; set; }
+
+        public void ToLog(Logger log)
+        {
+            log.Log(Level, Time, Message);
+        }
     }
 
     public enum SpatialCliStructure
@@ -36,16 +42,18 @@ namespace SpatialDotNet
 
     public enum SpatialLogLevel
     {
-        Debug,
-        Info,
-        Warning,
-        Error,
-        Fatal,
-        Panic
+        Debug = 0,
+        Info = 1,
+        Warning = 2,
+        Error = 3,
+        Fatal = 4,
+        Panic = 5
     }
     
     public class Spatial
     {
+        private Logger Log => LogManager.GetCurrentClassLogger();
+
         protected Func<SpatialCommandRunner> CommandFactory;
 
         public string SpatialPath { get; private set; }

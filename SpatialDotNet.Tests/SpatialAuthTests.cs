@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using NUnit.Framework;
 
 namespace SpatialDotNet.Tests
@@ -12,19 +11,23 @@ namespace SpatialDotNet.Tests
         {
             var spatial = new Spatial();
 
-            var result = await spatial.Auth.Login();
-            
-            Assert.IsNotEmpty(result);
+            await spatial.Auth.Login();
         }
 
         [Test]
-        public void TimeoutFormat()
+        public async Task CanLoginForced()
         {
-            var timeout = new TimeSpan(0, 0, 25, 10);
+            var spatial = new Spatial();
 
-            var result = timeout.ToString(@"mm\mss\s");
+            await spatial.Auth.Login(force: true);
+        }
 
-            Assert.AreEqual("25m10s", result);
+        [Test]
+        public async Task CanLogout()
+        {
+            var spatial = new Spatial();
+
+            await spatial.Auth.Logout();
         }
     }
 }
