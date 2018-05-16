@@ -1,2 +1,2 @@
 # SpatialDotNet
-A C# wrapper for SpatialOS's spatial.exe
+A C# wrapper for SpatialOS's CLI
