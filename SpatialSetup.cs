@@ -8,6 +8,7 @@ namespace SpatialDotNet
     {
         public SpatialSetup(Func<SpatialCommandRunner> commandFactory) : base(commandFactory) { }
 
+        /* spatial setup install-dependencies [flags] */
         public async Task InstallDependencies(bool dryRun = false, bool force = false, bool withJdk = false, bool withMsvc = true)
         {
             throw new NotImplementedException();
